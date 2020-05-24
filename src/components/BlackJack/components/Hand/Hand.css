@@ -1,0 +1,12 @@
+.Hand {
+  user-select: none;
+}
+
+.hand-row {
+  border: 1px red dotted;
+  padding: 0.5rem;
+  display: flex;
+  flex-flow: row wrap;
+  justify-content: space-between;
+  align-items: center;
+}

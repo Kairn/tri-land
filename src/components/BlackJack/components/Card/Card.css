@@ -1,0 +1,6 @@
+.Card {
+  user-select: none;
+  font-family: "Roboto Slab", serif;
+  border: 1px black double;
+  border-radius: 2px;
+}
