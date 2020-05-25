@@ -10,13 +10,9 @@ export class Hand extends Component {
       playerId: props.playerId,
       wager: props.wager,
       cards: props.cards,
-      value: 0,
-      isBust: false
+      value: props.value,
+      isBust: props.value > 21
     };
-  }
-
-  componentDidMount() {
-    this.updateValue();
   }
 
   render() {
@@ -24,7 +20,7 @@ export class Hand extends Component {
     let wagerRow = owner === 'Dealer' ? null : <h1>Wager: {this.state.wager}</h1>;
 
     return this.state.cards ? (
-      <div className="Hand" key={this.state.playerId.toString()}>
+      <div className={"Hand " + this.state.isBust ? 'bust' : 'no-bust'} key={this.state.playerId.toString()}>
         <h1>This is a {owner} hand</h1>
         {wagerRow}
         <h1>Hand Value: {this.state.value}</h1>
@@ -34,16 +30,13 @@ export class Hand extends Component {
       </div>
     ) : null;
   }
-
-  updateValue = () => {
-    // 
-  }
 };
 
 Hand.propTypes = {
   playerId: PropTypes.number,
   wager: PropTypes.number,
-  cards: PropTypes.arrayOf(Object)
+  cards: PropTypes.arrayOf(Object),
+  value: PropTypes.number
 };
 
 export default Hand;

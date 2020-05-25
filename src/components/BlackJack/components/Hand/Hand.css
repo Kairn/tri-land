@@ -2,6 +2,10 @@
   user-select: none;
 }
 
+.Hand.bust .hand-row {
+  text-decoration: line-through;
+}
+
 .hand-row {
   border: 1px red dotted;
   padding: 0.5rem;

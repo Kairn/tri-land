@@ -8,7 +8,8 @@ export class BlackJack extends Component {
     super(props);
     this.state = {
       gameState: 0,
-      playerCash: 1000
+      playerCash: 1000,
+      handValues: [0, 0, 0]
     };
   }
 
@@ -23,9 +24,16 @@ export class BlackJack extends Component {
         <div>
           <h2>Playing Black Jack</h2>
           <h2>Your cash: ${this.state.playerCash}</h2>
-          <Hand playerId={0} wager={0} cards={this.state.dealerHand} />
-          <Hand playerId={1} wager={this.state.wager} cards={this.state.playerHand1} />
-          <Hand playerId={2} wager={this.state.wager} cards={this.state.playerHand2} />
+          <Hand playerId={0} wager={0} cards={this.state.dealerHand} value={this.state.handValues[0]} />
+          <Hand playerId={1} wager={this.state.wager} cards={this.state.playerHand1} value={this.state.handValues[1]} />
+          <Hand playerId={2} wager={this.state.wager} cards={this.state.playerHand2} value={this.state.handValues[2]} />
+          <div>
+            <button type="button" disabled={false} onClick={this.onAction} value="hit">Hit</button>
+            <button type="button" disabled={false} onClick={this.onAction} value="split">Split</button>
+            <button type="button" disabled={false} onClick={this.onAction} value="double">Double</button>
+            <button type="button" disabled={false} onClick={this.onAction} value="stand">Stand</button>
+            <button type="button" disabled={false} onClick={this.onAction} value="forfeit">forfeit</button>
+          </div>
           <button type="button" onClick={this.end}>End Game</button>
         </div>
       )
@@ -60,6 +68,10 @@ export class BlackJack extends Component {
     );
   }
 
+  componentDidUpdate() {
+    console.log('Black Jack updated');
+  }
+
   start = () => {
     this.setState({
       playerCash: 1000,
@@ -76,6 +88,10 @@ export class BlackJack extends Component {
 
   onWage = (event) => {
     this.newGame(parseInt(event.target.value, 10));
+  }
+
+  onAction = (event) => {
+    this.doAction(event.target.value);
   }
 
   newDeck = () => {
@@ -121,9 +137,41 @@ export class BlackJack extends Component {
         playerCash: state.playerCash - wager,
         dealerHand,
         playerHand1: playerHand,
-        gameState: 2
+        gameState: 2,
+        activeHand: 1,
+        handValues: [this.calcValue(dealerHand), this.calcValue(playerHand), 0]
       }
     });
+  }
+
+  calcValue = (hand) => {
+    if (!hand || hand.length === 0) {
+      return 0;
+    }
+
+    let aces = 0;
+    let total = 0;
+
+    for (let i = 0; i < hand.length; ++i) {
+      let card = hand[i];
+      if (card.rank === 'A') {
+        ++aces;
+        ++total;
+      } else {
+        total += parseInt(card.rank, 10) ? parseInt(card.rank, 10) : 10;
+      }
+    }
+
+    while (aces > 0 && total < 12) {
+      --aces;
+      total += 10;
+    }
+
+    return total;
+  }
+
+  doAction = (action) => {
+    console.log('Player action: ' + action);
   }
 };
 
