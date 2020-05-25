@@ -9,7 +9,19 @@ export class BlackJack extends Component {
     this.state = {
       gameState: 0,
       playerCash: 1000,
-      handValues: [0, 0, 0]
+      wager: 0,
+      deck: [],
+      allHands: [],
+      handValues: [],
+      activeHand: 1,
+      evalHand: false,
+      evalGame: false,
+      canSplit: false,
+      hasSplit: false,
+      canDouble: false,
+      canForfeit: false,
+      gameOver: false,
+      payout: -1
     };
   }
 
@@ -19,33 +31,42 @@ export class BlackJack extends Component {
 
   render() {
     let screen;
+    let playerTurn = this.state.activeHand !== 0;
+
     if (this.state.gameState === 2) {
       screen = (
         <div>
           <h2>Playing Black Jack</h2>
           <h2>Your cash: ${this.state.playerCash}</h2>
-          <Hand playerId={0} wager={0} cards={this.state.dealerHand} value={this.state.handValues[0]} />
-          <Hand playerId={1} wager={this.state.wager} cards={this.state.playerHand1} value={this.state.handValues[1]} />
-          <Hand playerId={2} wager={this.state.wager} cards={this.state.playerHand2} value={this.state.handValues[2]} />
+          {this.state.allHands.map((hand) => {
+            let handId = hand.handId;
+            let cards = hand.cards;
+            let wager = handId === 0 ? 0 : this.state.wager;
+            return <Hand key={handId} playerId={handId} wager={wager} cards={cards} value={this.state.handValues[handId]} />
+          })}
           <div>
-            <button type="button" disabled={false} onClick={this.onAction} value="hit">Hit</button>
-            <button type="button" disabled={false} onClick={this.onAction} value="split">Split</button>
-            <button type="button" disabled={false} onClick={this.onAction} value="double">Double</button>
-            <button type="button" disabled={false} onClick={this.onAction} value="stand">Stand</button>
-            <button type="button" disabled={false} onClick={this.onAction} value="forfeit">forfeit</button>
+            <button type="button" disabled={!playerTurn} onClick={this.onAction} value="hit">Hit</button>
+            <button type="button" disabled={!playerTurn || !this.state.canSplit} onClick={this.onAction} value="split">Split</button>
+            <button type="button" disabled={!playerTurn || !this.state.canDouble} onClick={this.onAction} value="double">Double</button>
+            <button type="button" disabled={!playerTurn} onClick={this.onAction} value="stand">Stand</button>
+            <button type="button" disabled={!playerTurn || !this.state.canForfeit} onClick={this.onAction} value="forfeit">forfeit</button>
           </div>
           <button type="button" onClick={this.end}>End Game</button>
         </div>
       )
     } else if (this.state.gameState === 1) {
+      let message = this.state.gameOver ? 'Game over' : 'Choose your wager';
+      let payoutRow = this.state.payout > -1 ? <h2>Your last payout: ${this.state.payout}</h2> : null;
       screen = (
         <div>
-          <h2>Choose your wager</h2>
-          <button type="button" onClick={this.onWage} value={100}>100</button>
-          <button type="button" onClick={this.onWage} value={50}>50</button>
-          <button type="button" onClick={this.onWage} value={20}>20</button>
-          <button type="button" onClick={this.onWage} value={10}>10</button>
+          <h2>Your cash: ${this.state.playerCash}</h2>
+          <h2>{message}</h2>
+          <button type="button" disabled={this.state.playerCash < 100} onClick={this.onWage} value={100}>100</button>
+          <button type="button" disabled={this.state.playerCash < 50} onClick={this.onWage} value={50}>50</button>
+          <button type="button" disabled={this.state.playerCash < 20} onClick={this.onWage} value={20}>20</button>
+          <button type="button" disabled={this.state.playerCash < 10} onClick={this.onWage} value={10}>10</button>
           <br />
+          {payoutRow}
           <button type="button" onClick={this.end}>End Game</button>
         </div>
       )
@@ -70,12 +91,19 @@ export class BlackJack extends Component {
 
   componentDidUpdate() {
     console.log('Black Jack updated');
+    if (this.state.evalHand) {
+      this.evalHand(this.state.activeHand);
+    }
+    if (this.state.evalGame) {
+      this.evalGame();
+    }
   }
 
   start = () => {
     this.setState({
       playerCash: 1000,
-      gameState: 1
+      gameState: 1,
+      gameOver: false
     });
   }
 
@@ -87,7 +115,7 @@ export class BlackJack extends Component {
   }
 
   onWage = (event) => {
-    this.newGame(parseInt(event.target.value, 10));
+    this.newRound(parseInt(event.target.value, 10));
   }
 
   onAction = (event) => {
@@ -125,53 +153,243 @@ export class BlackJack extends Component {
     return newDeck;
   }
 
-  newGame = (wager) => {
+  newRound = (wager) => {
     let deck = this.newDeck();
-    let dealerHand = [deck.pop()];
-    let playerHand = [deck.pop(), deck.pop()];
+    let dealerHand = {
+      handId: 0,
+      cards: [deck.pop()]
+    };
+    let playerHand = {
+      handId: 1,
+      cards: [deck.pop(), deck.pop()]
+    };
 
     this.setState((state) => {
       return {
         deck,
         wager,
         playerCash: state.playerCash - wager,
-        dealerHand,
-        playerHand1: playerHand,
+        allHands: [dealerHand, playerHand],
         gameState: 2,
         activeHand: 1,
-        handValues: [this.calcValue(dealerHand), this.calcValue(playerHand), 0]
+        handValues: [this.calcValue(dealerHand.cards)[0], this.calcValue(playerHand.cards)[0]],
+        evalHand: true,
+        canSplit: false,
+        hasSplit: false,
+        canDouble: false,
+        canForfeit: false,
+        payout: -1
       }
     });
   }
 
-  calcValue = (hand) => {
-    if (!hand || hand.length === 0) {
-      return 0;
-    }
-
-    let aces = 0;
+  calcValue = (cards) => {
+    let hasAce = false;
     let total = 0;
 
-    for (let i = 0; i < hand.length; ++i) {
-      let card = hand[i];
+    for (let i = 0; i < cards.length; ++i) {
+      let card = cards[i];
       if (card.rank === 'A') {
-        ++aces;
+        hasAce = true;
         ++total;
       } else {
         total += parseInt(card.rank, 10) ? parseInt(card.rank, 10) : 10;
       }
     }
 
-    while (aces > 0 && total < 12) {
-      --aces;
-      total += 10;
+    return (total < 12 && hasAce) ? [total + 10, true] : [total, false];
+  }
+
+  willDealerStand = (cards) => {
+    let playerValues = this.state.handValues.slice(1, this.state.handValues.length);
+    if (playerValues.filter((value) => value <= 21).length === 0) {
+      return true;
     }
 
-    return total;
+    let value = this.calcValue(cards);
+    return value[0] > 17 || (value[0] === 17 && !value[1]);
+  }
+
+  getNextHand = (activeHand) => {
+    return activeHand === 1 ? this.state.allHands[2] ? 2 : 0 : 0;
+  }
+
+  evalHand = (activeHand) => {
+    let value = this.state.handValues[activeHand];
+    let cards = this.state.allHands[activeHand].cards;
+    if (activeHand === 0) {
+      if (this.willDealerStand(cards)) {
+        this.roundOver();
+      } else {
+        setTimeout(1000);
+        this.drawAction(0);
+      }
+    } else {
+      let canSplit = false;
+      let canDouble = false;
+      let canForfeit = false;
+
+      if (value >= 21) {
+        this.setState({
+          activeHand: this.getNextHand(activeHand),
+          evalHand: true
+        });
+        return;
+      }
+      if (activeHand === 1) {
+        let hasCash = this.state.playerCash >= this.state.wager;
+        if (cards.length === 2 && !this.state.hasSplit) {
+          canForfeit = true;
+          if (cards[0].rank === cards[1].rank && hasCash) {
+            canSplit = true;
+          }
+        }
+        if (hasCash && !this.state.hasSplit) {
+          canDouble = true;
+        }
+      }
+
+      // Wait for player action
+      this.setState({
+        evalHand: false,
+        canDouble,
+        canSplit,
+        canForfeit
+      });
+    }
   }
 
   doAction = (action) => {
     console.log('Player action: ' + action);
+    let activeHand = this.state.activeHand;
+    switch (action) {
+      case 'hit':
+        this.drawAction(activeHand);
+        break;
+      case 'split':
+        this.splitAction(activeHand);
+        break;
+      case 'double':
+        this.drawAction(activeHand, true);
+        break;
+      case 'Stand':
+        this.setState({
+          activeHand: this.getNextHand(activeHand),
+          evalHand: true
+        });
+        break;
+      case 'forfeit':
+        this.roundOver(true);
+        break;
+      default:
+        break;
+    }
+  }
+
+  drawAction = (activeHand, commit) => {
+    let deck = this.state.deck;
+    let cards = this.state.allHands[activeHand].cards.concat(deck.pop());
+    let newHand = {
+      handId: activeHand,
+      cards: cards
+    }
+    let allHands = this.state.allHands;
+    let handValues = this.state.handValues;
+    allHands[activeHand] = newHand;
+    handValues[activeHand] = this.calcValue(cards)[0];
+
+    this.setState({
+      playerCash: commit ? this.state.playerCash - this.state.wager : this.state.playerCash,
+      wager: commit ? this.state.wager * 2 : this.state.wager,
+      activeHand: commit ? 0 : activeHand,
+      deck,
+      allHands,
+      handValues,
+      evalHand: true
+    });
+  }
+
+  splitAction = (activeHand) => {
+    let deck = this.state.deck;
+    let allHands = this.state.allHands;
+    let handValues = this.state.handValues;
+    let srcCards = allHands[activeHand].cards.slice(0, 1);
+    let newCards = allHands[activeHand].cards.slice(1, 2);
+    srcCards.push(deck.pop());
+    newCards.push(deck.pop());
+    handValues[activeHand] = this.calcValue(srcCards);
+    handValues[activeHand + 1] = this.calcValue(newCards);
+
+    allHands[activeHand] = {
+      handId: activeHand,
+      cards: srcCards
+    };
+    allHands[activeHand + 1] = {
+      handId: activeHand + 1,
+      cards: newCards
+    };
+
+    this.setState({
+      playerCash: this.state.playerCash - this.state.wager,
+      deck,
+      allHands,
+      activeHand,
+      handValues,
+      hasSplit: true,
+      evalHand: true
+    });
+  }
+
+  roundOver = (forfeit) => {
+    let playerCash = this.state.playerCash;
+    let wager = this.state.wager;
+    let payout = 0;
+    if (forfeit) {
+      payout += parseInt(wager / 2, 10);
+      playerCash += parseInt(wager / 2, 10);
+    } else {
+      for (let i = 1; i < this.state.allHands.length; ++i) {
+        let pay = parseInt(wager * this.dealerWillPay(i), 10);
+        payout += pay;
+        playerCash += pay;
+      }
+    }
+
+    this.setState({
+      playerCash,
+      evalHand: false,
+      evalGame: true,
+      payout
+    })
+  }
+
+  dealerWillPay = (handId) => {
+    let dealerValue = this.state.handValues[0];
+    let dealerBj = dealerValue === 21 && this.state.allHands[0].cards.length === 2;
+    let dealerBust = dealerValue > 21;
+    let playerValue = this.state.handValues[handId];
+    let playerBj = playerValue === 21 && this.state.allHands[handId].cards.length === 2;
+    let playerBust = playerValue > 21;
+
+    if (playerBust) {
+      return 0;
+    } else if (dealerBust) {
+      return playerBj ? 2.5 : 2;
+    } else if (dealerBj) {
+      return playerBj ? 1 : 0;
+    } else if (playerBj) {
+      return 2.5;
+    } else {
+      return dealerValue > playerValue ? 0 : dealerValue === playerValue ? 1 : 2;
+    }
+  }
+
+  evalGame = () => {
+    this.setState({
+      gameState: 1,
+      evalGame: false,
+      gameOver: this.state.playerCash < 10
+    });
   }
 };
 
