@@ -25,10 +25,6 @@ export class BlackJack extends Component {
     };
   }
 
-  componentDidMount() {
-    console.log('Black Jack mounted');
-  }
-
   render() {
     let screen;
     let playerTurn = this.state.activeHand !== 0;
@@ -90,7 +86,6 @@ export class BlackJack extends Component {
   }
 
   componentDidUpdate() {
-    console.log('Black Jack updated');
     if (this.state.evalHand) {
       this.evalHand(this.state.activeHand);
     }
@@ -221,7 +216,6 @@ export class BlackJack extends Component {
       if (this.willDealerStand(cards)) {
         this.roundOver();
       } else {
-        setTimeout(1000);
         this.drawAction(0);
       }
     } else {
@@ -272,7 +266,7 @@ export class BlackJack extends Component {
       case 'double':
         this.drawAction(activeHand, true);
         break;
-      case 'Stand':
+      case 'stand':
         this.setState({
           activeHand: this.getNextHand(activeHand),
           evalHand: true
@@ -317,8 +311,8 @@ export class BlackJack extends Component {
     let newCards = allHands[activeHand].cards.slice(1, 2);
     srcCards.push(deck.pop());
     newCards.push(deck.pop());
-    handValues[activeHand] = this.calcValue(srcCards);
-    handValues[activeHand + 1] = this.calcValue(newCards);
+    handValues[activeHand] = this.calcValue(srcCards)[0];
+    handValues[activeHand + 1] = this.calcValue(newCards)[0];
 
     allHands[activeHand] = {
       handId: activeHand,
