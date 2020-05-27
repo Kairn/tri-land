@@ -1,8 +1,9 @@
 import React from 'react';
 import './App.css';
 import { BrowserRouter as Router, Route, Link, Switch } from 'react-router-dom';
-import BlackJack from '../BlackJack';
-import Nim from '../Nim';
+import { BlackJack } from '../BlackJack';
+import { Nim } from '../Nim';
+import { TechTalk } from '../TechTalk';
 
 function App() {
   return (
@@ -14,6 +15,7 @@ function App() {
           <Route exact path='/' component={Home} />
           <Route path='/blackjack' component={BlackJack} />
           <Route path='/nim' component={Nim} />
+          <Route path='/tecktalk' component={TechTalk} />
         </Switch>
         <h1>Tri Footer</h1>
       </div>
@@ -31,6 +33,9 @@ function Home() {
         </li>
         <li>
           <Link to="/nim">Nim Game</Link>
+        </li>
+        <li>
+          <Link to="/tecktalk">Tech Talk</Link>
         </li>
       </ul>
     </div>

@@ -1,1 +1,1 @@
-export { default } from './BlackJack';
+export { default as BlackJack } from './BlackJack';

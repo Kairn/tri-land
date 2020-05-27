@@ -1,1 +1,1 @@
-export { default } from './Nim';
+export { default as Nim } from './Nim';
