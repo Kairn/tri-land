@@ -15,7 +15,7 @@ export class BlackJack extends Component {
       handValues: [],
       activeHand: 1,
       evalHand: false,
-      evalGame: false,
+      evalRes: -1,
       canSplit: false,
       hasSplit: false,
       canDouble: false,
@@ -30,6 +30,27 @@ export class BlackJack extends Component {
     let playerTurn = this.state.activeHand !== 0;
 
     if (this.state.gameState === 2) {
+      let actions;
+      if (this.state.evalRes === -1) {
+        actions = (
+          <div>
+            <button type="button" disabled={!playerTurn} onClick={this.onAction} value="hit">Hit</button>
+            <button type="button" disabled={!playerTurn || !this.state.canSplit} onClick={this.onAction} value="split">Split</button>
+            <button type="button" disabled={!playerTurn || !this.state.canDouble} onClick={this.onAction} value="double">Double</button>
+            <button type="button" disabled={!playerTurn} onClick={this.onAction} value="stand">Stand</button>
+            <button type="button" disabled={!playerTurn || !this.state.canForfeit} onClick={this.onAction} value="forfeit">forfeit</button>
+          </div>
+        );
+      } else {
+        let payoutRow = this.state.payout > -1 ? <h2>Your last payout: ${this.state.payout}</h2> : null;
+        actions = (
+          <div>
+            <div>{payoutRow}</div>
+            <button type="button" disabled={false} onClick={this.evalGame}>Continue</button>
+          </div>
+        );
+      }
+
       screen = (
         <div>
           <h2>Playing Black Jack</h2>
@@ -40,19 +61,13 @@ export class BlackJack extends Component {
             let wager = handId === 0 ? 0 : this.state.wager;
             return <Hand key={handId} playerId={handId} wager={wager} cards={cards} value={this.state.handValues[handId]} />
           })}
-          <div>
-            <button type="button" disabled={!playerTurn} onClick={this.onAction} value="hit">Hit</button>
-            <button type="button" disabled={!playerTurn || !this.state.canSplit} onClick={this.onAction} value="split">Split</button>
-            <button type="button" disabled={!playerTurn || !this.state.canDouble} onClick={this.onAction} value="double">Double</button>
-            <button type="button" disabled={!playerTurn} onClick={this.onAction} value="stand">Stand</button>
-            <button type="button" disabled={!playerTurn || !this.state.canForfeit} onClick={this.onAction} value="forfeit">forfeit</button>
-          </div>
+          {actions}
           <button type="button" onClick={this.end}>End Game</button>
         </div>
       )
     } else if (this.state.gameState === 1) {
       let message = this.state.gameOver ? 'Game over' : 'Choose your wager';
-      let payoutRow = this.state.payout > -1 ? <h2>Your last payout: ${this.state.payout}</h2> : null;
+
       screen = (
         <div>
           <h2>Your cash: ${this.state.playerCash}</h2>
@@ -62,7 +77,6 @@ export class BlackJack extends Component {
           <button type="button" disabled={this.state.playerCash < 20} onClick={this.onWage} value={20}>20</button>
           <button type="button" disabled={this.state.playerCash < 10} onClick={this.onWage} value={10}>10</button>
           <br />
-          {payoutRow}
           <button type="button" onClick={this.end}>End Game</button>
         </div>
       )
@@ -88,9 +102,6 @@ export class BlackJack extends Component {
   componentDidUpdate() {
     if (this.state.evalHand) {
       this.evalHand(this.state.activeHand);
-    }
-    if (this.state.evalGame) {
-      this.evalGame();
     }
   }
 
@@ -169,6 +180,7 @@ export class BlackJack extends Component {
         activeHand: 1,
         handValues: [this.calcValue(dealerHand.cards)[0], this.calcValue(playerHand.cards)[0]],
         evalHand: true,
+        evalRes: -1,
         canSplit: false,
         hasSplit: false,
         canDouble: false,
@@ -338,12 +350,17 @@ export class BlackJack extends Component {
     let playerCash = this.state.playerCash;
     let wager = this.state.wager;
     let payout = 0;
+    let evalRes = -1;
     if (forfeit) {
       payout += parseInt(wager / 2, 10);
       playerCash += parseInt(wager / 2, 10);
+      evalRes = 0;
     } else {
+      evalRes = 1;
       for (let i = 1; i < this.state.allHands.length; ++i) {
-        let pay = parseInt(wager * this.dealerWillPay(i), 10);
+        let ratio = this.dealerWillPay(i);
+        let pay = parseInt(wager * ratio, 10);
+        // Update hand status
         payout += pay;
         playerCash += pay;
       }
@@ -352,7 +369,7 @@ export class BlackJack extends Component {
     this.setState({
       playerCash,
       evalHand: false,
-      evalGame: true,
+      evalRes,
       payout
     })
   }
@@ -381,7 +398,7 @@ export class BlackJack extends Component {
   evalGame = () => {
     this.setState({
       gameState: 1,
-      evalGame: false,
+      evalRes: -1,
       gameOver: this.state.playerCash < 10
     });
   }
