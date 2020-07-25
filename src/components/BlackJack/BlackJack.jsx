@@ -42,7 +42,7 @@ export class BlackJack extends Component {
           </div>
         );
       } else {
-        let payoutRow = this.state.payout > -1 ? <h2>Your last payout: ${this.state.payout}</h2> : null;
+        let payoutRow = this.state.payout > -1 ? <h2>Your payout: ${this.state.payout}</h2> : null;
         actions = (
           <div>
             <div>{payoutRow}</div>
@@ -59,7 +59,9 @@ export class BlackJack extends Component {
             let handId = hand.handId;
             let cards = hand.cards;
             let wager = handId === 0 ? 0 : this.state.wager;
-            return <Hand key={handId} playerId={handId} wager={wager} cards={cards} value={this.state.handValues[handId]} />
+            let value = this.state.handValues[handId];
+            let status = hand.status;
+            return <Hand key={handId} playerId={handId} wager={wager} cards={cards} value={value} status={status} />
           })}
           {actions}
           <button type="button" onClick={this.end}>End Game</button>
@@ -228,7 +230,9 @@ export class BlackJack extends Component {
       if (this.willDealerStand(cards)) {
         this.roundOver();
       } else {
-        this.drawAction(0);
+        setTimeout(() => {
+          this.drawAction(0);
+        }, 1200);
       }
     } else {
       let canSplit = false;
@@ -266,7 +270,6 @@ export class BlackJack extends Component {
   }
 
   doAction = (action) => {
-    console.log('Player action: ' + action);
     let activeHand = this.state.activeHand;
     switch (action) {
       case 'hit':
@@ -351,9 +354,11 @@ export class BlackJack extends Component {
     let wager = this.state.wager;
     let payout = 0;
     let evalRes = -1;
+    let updHands = Array.from(this.state.allHands);
     if (forfeit) {
       payout += parseInt(wager / 2, 10);
       playerCash += parseInt(wager / 2, 10);
+      updHands[this.state.activeHand].status = -1;
       evalRes = 0;
     } else {
       evalRes = 1;
@@ -361,6 +366,8 @@ export class BlackJack extends Component {
         let ratio = this.dealerWillPay(i);
         let pay = parseInt(wager * ratio, 10);
         // Update hand status
+        let status = ratio === 1 ? 1 : ratio > 1 ? 2 : -2;
+        updHands[i].status = status;
         payout += pay;
         playerCash += pay;
       }
@@ -368,6 +375,7 @@ export class BlackJack extends Component {
 
     this.setState({
       playerCash,
+      allHands: updHands,
       evalHand: false,
       evalRes,
       payout
