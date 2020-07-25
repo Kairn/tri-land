@@ -27,12 +27,12 @@ export default function Hand(props) {
   handStatus = handStatus ? <h1>Status: {handStatus}</h1> : null;
 
   return props.cards ? (
-    <div className={"Hand " + props.isBust ? 'bust' : 'no-bust'} key={props.playerId.toString()}>
+    <div className={"Hand" + (props.isBust ? " bust" : "")} key={props.playerId.toString()}>
       <h1>This is a {owner} hand</h1>
       {wagerRow}
       <h1>Hand Value: {props.value}</h1>
       {handStatus}
-      <div className="hand-row">
+      <div className={"hand-row" + (props.isActive ? " active" : "")}>
         {props.cards.map((card) => <Card key={card.cardId} suit={card.suit} rank={card.rank} />)}
       </div>
     </div>
@@ -44,5 +44,7 @@ Hand.propTypes = {
   wager: PropTypes.number,
   cards: PropTypes.arrayOf(Object),
   value: PropTypes.number,
-  status: PropTypes.number
+  status: PropTypes.number,
+  isBust: PropTypes.bool,
+  isActive: PropTypes.bool
 };

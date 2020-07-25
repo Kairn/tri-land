@@ -61,7 +61,9 @@ export class BlackJack extends Component {
             let wager = handId === 0 ? 0 : this.state.wager;
             let value = this.state.handValues[handId];
             let status = hand.status;
-            return <Hand key={handId} playerId={handId} wager={wager} cards={cards} value={value} status={status} />
+            let isBust = this.state.handValues[handId] > 21;
+            let isActive = this.state.activeHand === handId;
+            return <Hand key={handId} playerId={handId} wager={wager} cards={cards} value={value} status={status} isBust={isBust} isActive={isActive} />
           })}
           {actions}
           <button type="button" onClick={this.end}>End Game</button>
