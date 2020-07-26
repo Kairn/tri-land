@@ -97,7 +97,7 @@ export class BlackJack extends Component {
     return (
       <div className="BlackJack">
         <h1>BlackJack reacts!</h1>
-        <h2>Black Jack Rules.</h2>
+        <h2>BlackJack Rules.</h2>
         {screen}
       </div>
     );
