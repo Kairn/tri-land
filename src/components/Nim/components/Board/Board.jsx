@@ -9,6 +9,7 @@ export default class Board extends Component {
     this.state = {
       heapVals: [],
       allHeaps: [],
+      heapMap: {},
       activePlayer: -1,
       winner: -1
     }
@@ -20,7 +21,7 @@ export default class Board extends Component {
         <h1>This is a Nim board.</h1>
         <div id="board-main-panel">
           {this.state.allHeaps.map((heap) => {
-            return <Heap key={heap.id} id={heap.id} count={heap.count} />;
+            return <Heap key={heap.id} id={heap.id} count={heap.count} isSelected={heap.isSelected} select={this.selectHeap} />;
           })}
         </div>
         <div id="nim-res">
@@ -52,7 +53,8 @@ export default class Board extends Component {
     let allHeaps = heapVals.map((c, i) => {
       return {
         id: i,
-        count: c
+        count: c,
+        isSelected: false
       };
     });
 
@@ -66,6 +68,18 @@ export default class Board extends Component {
 
   resetBoard = () => {
     // 
+  }
+
+  selectHeap = (heapId) => {
+    this.setState({
+      allHeaps: this.state.allHeaps.map((heap) => {
+        return {
+          id: heap.id,
+          count: heap.count,
+          isSelected: heap.id === heapId
+        };
+      })
+    });
   }
 };
 
