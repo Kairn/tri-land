@@ -3,10 +3,28 @@ import './Heap.css';
 import PropTypes from 'prop-types';
 
 export default class Heap extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      pendingIndex: -1
+    }
+  }
+
   render() {
     let rocks = [];
+    let pi = this.state.pendingIndex;
+
     for (let i = 0; i < this.props.count; ++i) {
-      rocks.push(<span className="rock" key={i} data-heap={this.props.id} data-id={i} onClick={this.doRemove}>{i}</span>);
+      rocks.push(
+        <span
+          className={"rock" + (pi > -1 && i >= pi ? " pending" : "")}
+          key={i} data-heap={this.props.id}
+          data-id={i}
+          onClick={this.doRemove}
+          onMouseEnter={this.doHover}
+          onMouseLeave={this.doLeave}
+        >{i}</span>
+      );
     }
 
     return (
@@ -25,8 +43,36 @@ export default class Heap extends Component {
     }
   }
 
+  doHover = (event) => {
+    if (this.props.isSelected) {
+      this.setState({
+        pendingIndex: parseInt(event.target.getAttribute('data-id'), 10)
+      });
+    }
+  }
+
+  doLeave = () => {
+    if (this.props.isSelected) {
+      this.setState({
+        pendingIndex: -1
+      });
+    }
+  }
+
   doRemove = (event) => {
-    // 
+    let pi = parseInt(event.target.getAttribute('data-id'), 10);
+    if (this.props.isSelected) {
+      if (pi === 0) {
+        // Remove the heap
+        this.props.die(this.props.id);
+      } else {
+        // Remove some rocks
+        this.setState({
+          pendingIndex: -1
+        });
+        this.props.nim(this.props.id, pi);
+      }
+    }
   }
 };
 

@@ -23,6 +23,6 @@
   background-color: red;
 }
 
-.Heap.selected .rock:hover {
+.rock.pending {
   opacity: 0.3;
 }
