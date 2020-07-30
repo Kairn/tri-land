@@ -15,9 +15,12 @@ export default class Board extends Component {
   }
 
   render() {
+    let player = this.state.activePlayer === 1 ? 'Player 1' : this.state.activePlayer === 0 ? 'Computer' : 'Player 2';
+
     return (
       <div className="Board">
         <h1>This is a Nim board.</h1>
+        <h2>{player}'s Turn</h2>
         <div id="board-main-panel">
           {this.state.allHeaps.map((heap) => {
             return (
@@ -25,6 +28,7 @@ export default class Board extends Component {
                 key={heap.id}
                 id={heap.id}
                 count={heap.count}
+                isPlayerTurn={this.state.activePlayer !== 0}
                 isSelected={heap.isSelected}
                 select={this.selectHeap}
                 nim={this.nimHeap}
@@ -76,7 +80,21 @@ export default class Board extends Component {
   }
 
   resetBoard = () => {
-    // 
+    this.setState({
+      allHeaps: this.state.heapVals.map((v, i) => {
+        return {
+          id: i,
+          count: v,
+          isSelected: false
+        };
+      }),
+      activePlayer: 1
+    });
+  }
+
+  getNextPlayer = () => {
+    let ap = this.state.activePlayer;
+    return ap === 1 ? this.props.mode === 1 ? 0 : 2 : 1;
   }
 
   selectHeap = (heapId) => {
@@ -99,7 +117,8 @@ export default class Board extends Component {
           count: heap.id === heapId ? count : heap.count,
           isSelected: false
         };
-      })
+      }),
+      activePlayer: this.getNextPlayer()
     });
   }
 
@@ -107,7 +126,8 @@ export default class Board extends Component {
     this.setState({
       allHeaps: this.state.allHeaps.filter((heap) => {
         return heap.id !== heapId;
-      })
+      }),
+      activePlayer: this.getNextPlayer()
     });
   }
 };

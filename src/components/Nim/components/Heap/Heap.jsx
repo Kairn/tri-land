@@ -28,7 +28,10 @@ export default class Heap extends Component {
     }
 
     return (
-      <div className={"Heap" + (this.props.isSelected ? " selected" : "")} onClick={this.doSelect}>
+      <div
+        className={"Heap" + (this.props.isSelected ? " selected" : "") + (this.props.isPlayerTurn ? " player" : "")}
+        onClick={this.doSelect}
+      >
         <h2>This is a heap of size {this.props.count}.</h2>
         <div className="heap-row">
           {rocks}
@@ -38,13 +41,13 @@ export default class Heap extends Component {
   }
 
   doSelect = () => {
-    if (!this.props.isSelected) {
+    if (this.props.isPlayerTurn && !this.props.isSelected) {
       this.props.select(this.props.id);
     }
   }
 
   doHover = (event) => {
-    if (this.props.isSelected) {
+    if (this.props.isPlayerTurn && this.props.isSelected) {
       this.setState({
         pendingIndex: parseInt(event.target.getAttribute('data-id'), 10)
       });
@@ -60,8 +63,8 @@ export default class Heap extends Component {
   }
 
   doRemove = (event) => {
-    let pi = parseInt(event.target.getAttribute('data-id'), 10);
-    if (this.props.isSelected) {
+    if (this.props.isPlayerTurn && this.props.isSelected) {
+      let pi = parseInt(event.target.getAttribute('data-id'), 10);
       if (pi === 0) {
         // Remove the heap
         this.props.die(this.props.id);
@@ -79,6 +82,7 @@ export default class Heap extends Component {
 Heap.prototypes = {
   id: PropTypes.number,
   count: PropTypes.number,
+  isPlayerTurn: PropTypes.bool,
   isSelected: PropTypes.bool,
   select: PropTypes.func,
   nim: PropTypes.func,

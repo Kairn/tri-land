@@ -4,12 +4,17 @@
   border: 2px pink solid;
 }
 
-.Heap:hover:not(.selected) {
+.Heap.player:hover:not(.selected) {
   background-color: lightpink;
+  cursor: pointer;
 }
 
 .Heap.selected {
   background-color: darksalmon;
+}
+
+.Heap.selected .rock {
+  cursor: pointer;
 }
 
 .rock {
