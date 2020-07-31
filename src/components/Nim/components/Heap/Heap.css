@@ -31,3 +31,7 @@
 .rock.pending {
   opacity: 0.3;
 }
+
+.rock.going {
+  background-color: orange;
+}

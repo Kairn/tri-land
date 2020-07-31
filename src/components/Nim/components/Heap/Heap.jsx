@@ -13,11 +13,12 @@ export default class Heap extends Component {
   render() {
     let rocks = [];
     let pi = this.state.pendingIndex;
+    let gi = this.props.goingIndex;
 
     for (let i = 0; i < this.props.count; ++i) {
       rocks.push(
         <span
-          className={"rock" + (pi > -1 && i >= pi ? " pending" : "")}
+          className={"rock" + (pi > -1 && i >= pi ? " pending" : "") + (gi > -1 && i >= gi ? " going" : "")}
           key={i} data-heap={this.props.id}
           data-id={i}
           onClick={this.doRemove}
@@ -84,6 +85,7 @@ Heap.prototypes = {
   count: PropTypes.number,
   isPlayerTurn: PropTypes.bool,
   isSelected: PropTypes.bool,
+  goingIndex: PropTypes.number,
   select: PropTypes.func,
   nim: PropTypes.func,
   die: PropTypes.func

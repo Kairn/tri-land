@@ -10,17 +10,27 @@ export default class Board extends Component {
       heapVals: [],
       allHeaps: [],
       activePlayer: -1,
-      winner: -1
+      winner: -1,
+      noUpdate: false
     }
   }
 
   render() {
     let player = this.state.activePlayer === 1 ? 'Player 1' : this.state.activePlayer === 0 ? 'Computer' : 'Player 2';
+    if (this.state.winner === -1 && player) {
+      player = <h2>{player}'s Turn</h2>
+    } else {
+      player = null;
+    }
+    let winner = this.state.winner === 1 ? 'Player 1' : this.state.winner === 0 ? 'Computer' : this.state.winner === 2 ? 'Player 2' : null;
+    if (winner) {
+      winner = <div>Game over. Winner is {winner}.</div>
+    }
 
     return (
       <div className="Board">
         <h1>This is a Nim board.</h1>
-        <h2>{player}'s Turn</h2>
+        {player}
         <div id="board-main-panel">
           {this.state.allHeaps.map((heap) => {
             return (
@@ -30,6 +40,7 @@ export default class Board extends Component {
                 count={heap.count}
                 isPlayerTurn={this.state.activePlayer !== 0}
                 isSelected={heap.isSelected}
+                goingIndex={heap.goingIndex}
                 select={this.selectHeap}
                 nim={this.nimHeap}
                 die={this.removeHeap}
@@ -37,6 +48,7 @@ export default class Board extends Component {
             );
           })}
         </div>
+        {winner}
         <div id="nim-res">
           <button type="button" onClick={this.resetBoard}>Restart</button>
           <button type="button" onClick={this.initBoard}>Reroll</button>
@@ -47,6 +59,31 @@ export default class Board extends Component {
 
   componentDidMount() {
     this.initBoard();
+  }
+
+  componentDidUpdate() {
+    if (this.state.noUpdate) {
+      return;
+    }
+
+    if (this.state.allHeaps.length === 0 && this.state.winner === -1) {
+      // Game over
+      if (this.props.style === 1) {
+        // Normal
+        this.setState({
+          winner: this.state.activePlayer === 1 ? this.props.mode === 1 ? 0 : 2 : 1
+        });
+      } else {
+        this.setState({
+          winner: this.state.activePlayer === 1 ? 1 : this.props.mode === 1 ? 0 : 2
+        });
+      }
+    } else if (this.state.activePlayer === 0 && this.state.winner === -1) {
+      // AI move
+      setTimeout(() => {
+        this.aiNim();
+      }, 1000);
+    }
   }
 
   initBoard = () => {
@@ -88,7 +125,8 @@ export default class Board extends Component {
           isSelected: false
         };
       }),
-      activePlayer: 1
+      activePlayer: 1,
+      winner: -1
     });
   }
 
@@ -118,7 +156,8 @@ export default class Board extends Component {
           isSelected: false
         };
       }),
-      activePlayer: this.getNextPlayer()
+      activePlayer: this.getNextPlayer(),
+      noUpdate: false
     });
   }
 
@@ -127,8 +166,37 @@ export default class Board extends Component {
       allHeaps: this.state.allHeaps.filter((heap) => {
         return heap.id !== heapId;
       }),
-      activePlayer: this.getNextPlayer()
+      activePlayer: this.getNextPlayer(),
+      noUpdate: false
     });
+  }
+
+  aiNim = () => {
+    // Calculate rocks to remove
+    let heapId = this.state.allHeaps[0].id;
+    let goingIndex = this.state.allHeaps[0].count - 1;
+
+    // Indicate intention
+    this.setState({
+      allHeaps: this.state.allHeaps.map((heap) => {
+        return {
+          id: heap.id,
+          count: heap.count,
+          isSelected: false,
+          goingIndex: heapId === heap.id ? goingIndex : -1
+        };
+      }),
+      noUpdate: true
+    });
+
+    // Execution after delay
+    setTimeout(() => {
+      if (goingIndex === 0) {
+        this.removeHeap(heapId);
+      } else {
+        this.nimHeap(heapId, goingIndex);
+      }
+    }, 1000);
   }
 };
 
