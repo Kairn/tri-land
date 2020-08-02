@@ -86,18 +86,44 @@ export default class Board extends Component {
     }
   }
 
+  getRandInt = (min, max) => {
+    min = Math.floor(min);
+    max = Math.floor(max);
+    if (min >= max) {
+      return NaN;
+    }
+
+    let bound = max - min;
+    return min + (Math.round(Math.random() * bound));
+  }
+
+  getNimSum = (array) => {
+    return array.reduce((prev, cur) => {
+      return prev ^ cur;
+    }, 0);
+  }
+
   initBoard = () => {
     let heapVals = [];
+
+    // Populate initial heaps
     if (this.props.level === 1) {
-      const count = 3;
-      for (let i = 0; i < count; ++i) {
-        heapVals.push(5);
+      const heapCount = this.getRandInt(3, 6);
+      for (let i = 0; i < heapCount; ++i) {
+        heapVals.push(this.getRandInt(2, 7));
       }
     } else {
-      const count = 7;
-      for (let i = 0; i < count; ++i) {
-        heapVals.push(9);
+      const heapCount = this.getRandInt(7, 15);
+      for (let i = 0; i < heapCount; ++i) {
+        heapVals.push(this.getRandInt(4, 16));
       }
+    }
+
+    // Adjust when against AI
+    // Player is always allowed to win against AI when moves are made appropriately
+    if (this.props.mode === 1 && this.getNimSum(heapVals) === 0) {
+      let hi = this.getRandInt(0, heapVals.length - 1);
+      heapVals[hi] += 1;
     }
 
     let allHeaps = heapVals.map((c, i) => {
@@ -172,9 +198,71 @@ export default class Board extends Component {
   }
 
   aiNim = () => {
-    // Calculate rocks to remove
-    let heapId = this.state.allHeaps[0].id;
-    let goingIndex = this.state.allHeaps[0].count - 1;
+    let isDefault = true;
+    let heaps = this.state.allHeaps;
+
+    // Passive move
+    let heapId = heaps[0].id;
+    let goingIndex = heaps[0].count - 1;
+
+    // Check for win condition for misère game
+    if (this.props.style === 2) {
+      if (heaps.length === 1 && heaps[0].count > 1) {
+        heapId = heaps[0].id;
+        goingIndex = 1;
+        isDefault = false;
+      } else if (heaps.length === 2) {
+        if (heaps[0].count === 1) {
+          heapId = heaps[1].id;
+          goingIndex = 0;
+          isDefault = false;
+        } else if (heaps[1].count === 1) {
+          heapId = heaps[0].id;
+          goingIndex = 0;
+          isDefault = false;
+        }
+      } else {
+        // Look for win position when all heaps except one have only one rock
+        let loneCount = 0;
+        let moreId = 0;
+        for (let heap of heaps) {
+          if (heap.count === 1) {
+            ++loneCount;
+          } else {
+            moreId = heap.id;
+          }
+        }
+        if (loneCount === heaps.length - 1) {
+          heapId = moreId;
+          goingIndex = loneCount % 2 === 0 ? 1 : 0;
+          isDefault = false;
+        }
+      }
+    } else {
+      // End the game with only one heap left for normal play
+      if (heaps.length === 1) {
+        heapId = heaps[0].id;
+        goingIndex = 0;
+        isDefault = false;
+      }
+    }
+
+    // Use the default behavior
+    let nimSum = this.getNimSum(heaps.map((heap) => heap.count));
+    if (isDefault && nimSum !== 0) {
+      Loop:
+      for (let heap of heaps) {
+        let count = heap.count;
+        let subSum = nimSum ^ count;
+        for (let i = 0; i < count; ++i) {
+          if ((i ^ subSum) === 0) {
+            heapId = heap.id;
+            goingIndex = i;
+            break Loop;
+          }
+        }
+      }
+    }
 
     // Indicate intention
     this.setState({
