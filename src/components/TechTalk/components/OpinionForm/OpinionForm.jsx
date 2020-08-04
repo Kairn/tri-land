@@ -1,14 +1,66 @@
-import React from 'react';
+import React, { Component } from 'react';
 import './OpinionForm.css';
 import { Formik } from 'formik';
+
+// Firebase setup
+import * as firebase from 'firebase/app';
+import 'firebase/database';
+
+const FB_CONFIG = {
+  apiKey: process.env.TL_API_KEY,
+  authDomain: 'tri-land-tech.firebaseapp.com',
+  databaseURL: 'https://tri-land-tech.firebaseio.com',
+  storageBucket: 'tri-land-tech.appspot.com'
+};
+
+firebase.initializeApp(FB_CONFIG);
+const database = firebase.database();
 
 const emailRegex = /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i;
 const requiredError = (field) => `${field} is required`;
 
-export default function OpinionForm() {
-  return (
-    <div className="OpinionForm">
-      <h1>This is the form content</h1>
+// Write operation
+const writeToFB = async function(email, name, source, profession, siteOpinion, reactOpinion) {
+  // Get hash ID from email
+  let encoder = new TextEncoder();
+  let data = encoder.encode(email);
+  let hash = await crypto.subtle.digest('SHA-256', data);
+  let hashArr = Array.from(new Uint8Array(hash)).slice(0, 12);
+  const hashId = hashArr.map((byte) => {
+    return byte.toString(16).padStart(2, '0');
+  }).join('');
+
+  // Send data
+  database.ref(`comments/user-${hashId}`).set({
+    name,
+    email,
+    source,
+    profession,
+    siteOpinion,
+    reactOpinion
+  });
+}
+
+export default class OpinionForm extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      submitted: false
+    };
+  }
+
+  componentDidUpdate() {
+    if (this.state.submitted) {
+      setTimeout(() => {
+        this.setState({
+          submitted: false
+        });
+      }, 3000);
+    }
+  }
+
+  render() {
+    let formik = (
       <Formik
         initialValues={{
           yourName: '',
@@ -40,8 +92,15 @@ export default function OpinionForm() {
           }
           return errors;
         }}
-        onSubmit={(values, actions) => {
-          console.log(JSON.stringify(values, null, 2));
+        onSubmit={async (values, actions) => {
+          // Submission logic
+          // console.log(JSON.stringify(values, null, 2));
+          await writeToFB(values.emailAddress, values.yourName, values.source, values.profession, values.siteOpinion, values.reactOpinion);
+          // Reset form
+          actions.resetForm({
+            values: ''
+          });
+          this.notifySubmission();
           actions.setSubmitting(false);
         }}
       >
@@ -118,6 +177,21 @@ export default function OpinionForm() {
           );
         }}
       </Formik>
-    </div>
-  );
+    );
+    let msg = this.state.submitted ? <h1>Feedback submitted!</h1> : null
+
+    return (
+      <div className="OpinionForm">
+        <h1>This is the form content</h1>
+        {formik}
+        {msg}
+      </div>
+    );
+  }
+
+  notifySubmission = () => {
+    this.setState({
+      submitted: true
+    });
+  }
 };

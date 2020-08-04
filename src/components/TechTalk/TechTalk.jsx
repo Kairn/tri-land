@@ -1,14 +1,16 @@
-import React from 'react';
+import React, { Component } from 'react';
 import './TechTalk.css';
 import { Link } from 'react-router-dom';
 import { OpinionForm } from './components';
 
-export default function TechTalk() {
-  return (
-    <div className="TechTalk">
-      <h1>Tell me what do you think!</h1>
-      <OpinionForm />
-      <Link to="/">Back</Link>
-    </div>
-  );
+export default class TechTalk extends Component {
+  render() {
+    return (
+      <div className="TechTalk">
+        <h1>Tell me what do you think!</h1>
+        <OpinionForm />
+        <Link to="/">Back</Link>
+      </div>
+    );
+  }
 };
