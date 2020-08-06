@@ -1,4 +1,138 @@
 .App {
   font-family: "Roboto", sans-serif;
   font-size: 16px;
+  /* background-color: #00002b; */
+  background: linear-gradient(#000004, #00002f);
+  color: white;
+  height: 100vh;
+  position: relative;
+}
+
+#title {
+  text-align: center;
+  font-size: 56px;
+  padding: 2.25rem 0 0 0;
+  text-shadow: 2px 0px 2px white;
+  user-select: none;
+  margin-bottom: 1rem;
+}
+
+#tl-title {
+  margin-bottom: 0.25rem;
+}
+
+#home-main {
+  padding: 2rem 0.5rem;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+}
+
+.feature-box {
+  padding: 0.25rem 2rem 1rem 2rem;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  align-items: center;
+  margin: 0 6rem;
+  width: 350px;
+  height: 500px;
+  border-radius: 16px;
+  opacity: 0.8;
+  transition-duration: 0.75s;
+}
+
+.feature-box p {
+  font-size: 24px;
+}
+
+#fb-1 {
+  background-color: #d32f2f;
+}
+
+#fb-2 {
+  background-color: #aa00ff;
+}
+
+.feature-box:hover {
+  opacity: 1;
+  transition-duration: 0.75s;
+}
+
+#fb-1 .feature-btn {
+  background-color: #1976d2;
+}
+
+#fb-2 .feature-btn {
+  background-color: #e65100;
+}
+
+.feature-icon {
+  width: 96px;
+  height: 96px;
+  user-select: none;
+}
+
+.feature-title {
+  font-size: 42px;
+  font-style: italic;
+}
+
+.feature-btn {
+  display: block;
+  width: 10rem;
+  color: white;
+  text-decoration: none;
+  padding: 0.5rem 1rem;
+  border-radius: 4px;
+  font-size: 20px;
+}
+
+#feedback {
+  margin: 1rem 0;
+  padding: 0.5rem;
+}
+
+#tt-btn {
+  display: block;
+  width: 12rem;
+  margin: auto;
+  padding: 0.75rem 1rem;
+  border-radius: 4px;
+  font-size: 20px;
+  text-align: center;
+  text-decoration: none;
+  color: white;
+  background: linear-gradient(to right, #1a237e, #0097a7);
+  opacity: 0.9;
+}
+
+#tt-btn:hover {
+  opacity: 1;
+}
+
+#footer {
+  position: absolute;
+  left: 1%;
+  bottom: 1%;
+}
+
+#ft-box {
+  display: flex;
+  align-items: center;
+}
+
+#ft-box > * {
+  display: inline-flex;
+  margin-right: 1rem;
+  font-style: italic;
+  font-size: 18px;
+  align-items: center;
+}
+
+#ft-box img {
+  height: 24px;
+  width: 24px;
 }
