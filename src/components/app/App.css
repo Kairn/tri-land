@@ -4,8 +4,12 @@
   /* background-color: #00002b; */
   background: linear-gradient(#000004, #00002f);
   color: white;
-  height: 100vh;
+  min-height: 100vh;
   position: relative;
+}
+
+.Home {
+  min-height: 100%;
 }
 
 #title {
@@ -38,10 +42,10 @@
   align-items: center;
   margin: 0 6rem;
   width: 350px;
-  height: 500px;
+  height: 550px;
   border-radius: 16px;
   opacity: 0.8;
-  transition-duration: 0.75s;
+  transition: opacity 0.75s;
 }
 
 .feature-box p {
@@ -58,7 +62,7 @@
 
 .feature-box:hover {
   opacity: 1;
-  transition-duration: 0.75s;
+  transition: opacity 0.75s;
 }
 
 #fb-1 .feature-btn {
@@ -91,22 +95,27 @@
 }
 
 #feedback {
-  margin: 1rem 0;
+  margin: 1rem 0 0;
   padding: 0.5rem;
 }
 
 #tt-btn {
-  display: block;
-  width: 12rem;
-  margin: auto;
-  padding: 0.75rem 1rem;
-  border-radius: 4px;
-  font-size: 20px;
-  text-align: center;
-  text-decoration: none;
-  color: white;
+  position: absolute;
+  right: 1.5rem;
+  bottom: 1.5rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 50%;
   background: linear-gradient(to right, #1a237e, #0097a7);
   opacity: 0.9;
+  width: 80px;
+  height: 80px;
+}
+
+#tt-btn img {
+  width: 36px;
+  height: 36px;
 }
 
 #tt-btn:hover {
@@ -115,8 +124,8 @@
 
 #footer {
   position: absolute;
-  left: 1%;
-  bottom: 1%;
+  left: 0.75rem;
+  bottom: 0.5rem;
 }
 
 #ft-box {
@@ -126,7 +135,7 @@
 
 #ft-box > * {
   display: inline-flex;
-  margin-right: 1rem;
+  margin-right: 0.75rem;
   font-style: italic;
   font-size: 18px;
   align-items: center;
@@ -135,4 +144,112 @@
 #ft-box img {
   height: 24px;
   width: 24px;
+}
+
+@media only screen and (max-width: 1260px) {
+  #title {
+    font-size: 44px;
+  }
+
+  .feature-box {
+    padding: 0.25rem 2rem 1rem 2rem;
+    margin: 0 4rem;
+    width: 350px;
+    height: 550px;
+  }
+
+  .feature-box p {
+    font-size: 20px;
+  }
+
+  .feature-icon {
+    width: 88px;
+    height: 88px;
+  }
+
+  .feature-title {
+    font-size: 36px;
+  }
+
+  #tt-btn {
+    width: 68px;
+    height: 68px;
+  }
+
+  #tt-btn img {
+    width: 32px;
+    height: 32px;
+  }
+}
+
+@media only screen and (max-width: 1060px) {
+  #title {
+    font-size: 40px;
+  }
+
+  .feature-box {
+    width: 350px;
+    height: 475px;
+  }
+
+  #home-main {
+    padding: 2rem 0.5rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+  }
+
+  #fb-1 {
+    margin: 0 0 1.5rem 0;
+  }
+
+  #fb-2 {
+    margin: 1.5rem 0 2.25rem 0;
+  }
+}
+
+@media only screen and (max-width: 660px) {
+  #title {
+    font-size: 36px;
+  }
+
+  .feature-box {
+    width: 275px;
+    height: 400px;
+  }
+
+  .feature-box p {
+    font-size: 20px;
+  }
+
+  .feature-icon {
+    width: 84px;
+    height: 84px;
+  }
+
+  .feature-title {
+    font-size: 34px;
+  }
+
+  #ft-box > * {
+    font-size: 16px;
+  }
+
+  #ft-box img {
+    height: 22px;
+    width: 22px;
+  }
+
+  #tt-btn {
+    right: 1rem;
+    bottom: 1rem;
+    width: 48px;
+    height: 48px;
+  }
+
+  #tt-btn img {
+    width: 24px;
+    height: 24px;
+  }
 }

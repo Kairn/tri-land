@@ -9,6 +9,7 @@ import { TechTalk } from '../TechTalk';
 import bjIcon from '../../assets/blackjack.svg';
 import nimIcon from '../../assets/nim.svg';
 import ghIcon from '../../assets/github.svg';
+import ttIcon from '../../assets/techtalk.svg';
 
 function App() {
   return (
@@ -20,6 +21,9 @@ function App() {
           <Route path='/nim' component={Nim} />
           <Route path='/tecktalk' component={TechTalk} />
         </Switch>
+        <Link id="tt-btn" to="/tecktalk">
+          <img src={ttIcon} alt="techtalk" />
+        </Link>
         <div id="footer">
           <div id="ft-box">
             <a href="https://github.com/Kairn/tri-land" target="_blank" rel="noopener noreferrer"><img src={ghIcon} alt="github" /></a>
@@ -51,9 +55,6 @@ function Home() {
           <p>Feeling smart? Let's see how quickly can you think!</p>
           <Link className="feature-btn" to="/nim">Play</Link>
         </div>
-      </div>
-      <div id="feedback">
-        <Link id="tt-btn" to="/tecktalk">Tech Talk</Link>
       </div>
     </div>
   );
