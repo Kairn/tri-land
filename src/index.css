@@ -1,4 +1,8 @@
 /* Reset */
+* {
+  box-sizing: border-box;
+}
+
 html,
 body,
 div,
@@ -131,12 +135,12 @@ code {
 
 /* General */
 header.header-sect {
-  padding: 2.25rem 0;
+  padding: 2.5rem 0 0;
   text-align: center;
   font-size: 52px;
 }
 
-aside.back-sect {
+.back-btn {
   position: absolute;
   right: 1.5rem;
   bottom: calc(3rem + 80px);
@@ -150,12 +154,12 @@ aside.back-sect {
   height: 80px;
 }
 
-.back-sect img {
+.back-btn img {
   width: 40px;
   height: 40px;
 }
 
-.back-sect:hover {
+.back-btn:hover {
   opacity: 1;
 }
 
@@ -164,13 +168,13 @@ aside.back-sect {
     font-size: 42px;
   }
 
-  aside.back-sect {
+  .back-btn {
     bottom: calc(3rem + 68px);
     width: 68px;
     height: 68px;
   }
 
-  aside.back-sect img {
+  .back-btn img {
     width: 34px;
     height: 34px;
   }
@@ -187,14 +191,14 @@ aside.back-sect {
     font-size: 32px;
   }
 
-  aside.back-sect {
+  .back-btn {
     right: 1rem;
     bottom: calc(2rem + 48px);
     width: 48px;
     height: 48px;
   }
 
-  aside.back-sect img {
+  .back-btn img {
     width: 26px;
     height: 26px;
   }

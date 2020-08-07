@@ -13,11 +13,9 @@ export default class TechTalk extends Component {
           <h1>Your Opinions Matter</h1>
         </header>
         <OpinionForm />
-        <aside className="back-sect">
-          <Link className="back-btn" to="/">
-            <img src={bkIcon} alt="back" />
-          </Link>
-        </aside>
+        <Link className="back-btn" to="/">
+          <img src={bkIcon} alt="back" />
+        </Link>
       </div>
     );
   }

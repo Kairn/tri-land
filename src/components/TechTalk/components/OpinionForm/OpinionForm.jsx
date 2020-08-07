@@ -116,78 +116,117 @@ export default class OpinionForm extends Component {
           isSubmitting,
         }) => {
           return (
-            <form onSubmit={handleSubmit}>
-              <input
-                type="text"
-                name="yourName"
-                onChange={handleChange}
-                onBlur={handleBlur}
-                value={values.yourName}
-              />
-              {errors.yourName && touched.yourName && errors.yourName}
-              <input
-                type="text"
-                name="emailAddress"
-                onChange={handleChange}
-                onBlur={handleBlur}
-                value={values.emailAddress}
-              />
-              {errors.emailAddress && touched.emailAddress && errors.emailAddress}
-              <input
-                type="text"
-                name="profession"
-                onChange={handleChange}
-                onBlur={handleBlur}
-                value={values.profession}
-              />
-              {errors.profession && touched.profession && errors.profession}
-              <select
-                name="source"
-                onChange={handleChange}
-                onBlur={handleBlur}
-                value={values.profession}
-              >
-                <option value="github">GitHub</option>
-                <option value="social_media">Social Media</option>
-                <option value="internet_search">Internet Search</option>
-                <option value="friends">Friends</option>
-                <option value="email">Email</option>
-                <option value="other">Other</option>
-              </select>
-              <textarea
-                name="siteOpinion"
-                cols="30"
-                rows="10"
-                placeholder="Write here..."
-                onChange={handleChange}
-                onBlur={handleBlur}
-                value={values.siteOpinion}
-              ></textarea>
-              {errors.siteOpinion && touched.siteOpinion && errors.siteOpinion}
-              <textarea
-                name="reactOpinion"
-                cols="30"
-                rows="10"
-                placeholder="Write here..."
-                onChange={handleChange}
-                onBlur={handleBlur}
-                value={values.reactOpinion}
-              ></textarea>
-              {errors.reactOpinion && touched.reactOpinion && errors.reactOpinion}
-              <button type="submit" disabled={isSubmitting}>Submit</button>
+            <form id="tt-form" onSubmit={handleSubmit}>
+              <div id="tt-form-sect">
+                <div className="input-wrapper">
+                  <label htmlFor="yourName"><span>*</span> Your Name</label>
+                  <input
+                    type="text"
+                    name="yourName"
+                    onChange={handleChange}
+                    onBlur={handleBlur}
+                    value={values.yourName}
+                  />
+                  <div className="tt-error">
+                    {errors.yourName && touched.yourName && errors.yourName}
+                  </div>
+                </div>
+                <div className="input-wrapper">
+                  <label htmlFor="emailAddress"><span>*</span> Email Address</label>
+                  <input
+                    type="text"
+                    name="emailAddress"
+                    onChange={handleChange}
+                    onBlur={handleBlur}
+                    value={values.emailAddress}
+                  />
+                  <div className="tt-error">
+                    {errors.emailAddress && touched.emailAddress && errors.emailAddress}
+                  </div>
+                </div>
+                <div className="input-wrapper">
+                  <label htmlFor="profession"><span>*</span> Your Profession</label>
+                  <input
+                    type="text"
+                    name="profession"
+                    onChange={handleChange}
+                    onBlur={handleBlur}
+                    value={values.profession}
+                  />
+                  <div className="tt-error">
+                    {errors.profession && touched.profession && errors.profession}
+                  </div>
+                </div>
+                <div className="input-wrapper">
+                  <label htmlFor="source"><span>*</span> Source of Knowledge</label>
+                  <select
+                    name="source"
+                    onChange={handleChange}
+                    onBlur={handleBlur}
+                    value={values.profession}
+                  >
+                    <option value="github">GitHub</option>
+                    <option value="social_media">Social Media</option>
+                    <option value="internet_search">Internet Search</option>
+                    <option value="friends">Friends</option>
+                    <option value="email">Email</option>
+                    <option value="other">Other</option>
+                  </select>
+                </div>
+                <div className="text-wrapper">
+                  <label htmlFor="siteOpinion"><span>*</span> Feedback for This Site</label>
+                  <textarea
+                    name="siteOpinion"
+                    cols="30"
+                    rows="8"
+                    placeholder="Write here..."
+                    onChange={handleChange}
+                    onBlur={handleBlur}
+                    value={values.siteOpinion}
+                  ></textarea>
+                  <div className="tt-error">
+                    {errors.siteOpinion && touched.siteOpinion && errors.siteOpinion}
+                  </div>
+                </div>
+                <div className="text-wrapper">
+                  <label htmlFor="reactOpinion"><span>*</span> Comments for Using React</label>
+                  <textarea
+                    name="reactOpinion"
+                    cols="30"
+                    rows="8"
+                    placeholder="Write here..."
+                    onChange={handleChange}
+                    onBlur={handleBlur}
+                    value={values.reactOpinion}
+                  ></textarea>
+                  <div className="tt-error">
+                    {errors.reactOpinion && touched.reactOpinion && errors.reactOpinion}
+                  </div>
+                </div>
+              </div>
+              <div id="tt-form-act">
+                <button type="submit" disabled={isSubmitting}>Submit</button>
+              </div>
             </form>
           );
         }}
       </Formik>
     );
-    // let msg = this.state.submitted ? <h1>Feedback submitted!</h1> : null
-    let msg = 1 ? <h1>Feedback submitted!</h1> : null
+    // let msg = this.state.submitted;
+    let msg = true;
+    let msgBox = (
+      <div id="msg-box" className={msg ? "" : "not-vis"}>
+        <div id="inner-msg">
+          <img src={suIcon} alt="submit" />
+          <span>Feedback Submitted!</span>
+        </div>
+      </div>
+    );
 
     return (
       <div className="OpinionForm">
-        <h1>This is the form content</h1>
         {formik}
-        {msg}
+        {msgBox}
       </div>
     );
   }
