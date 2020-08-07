@@ -128,3 +128,74 @@ code {
 .font-coug {
   font-family: "Courgette", cursive;
 }
+
+/* General */
+header.header-sect {
+  padding: 2.25rem 0;
+  text-align: center;
+  font-size: 52px;
+}
+
+aside.back-sect {
+  position: absolute;
+  right: 1.5rem;
+  bottom: calc(3rem + 80px);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 50%;
+  background: linear-gradient(to right, #ff7043, #880e4f);
+  opacity: 0.9;
+  width: 80px;
+  height: 80px;
+}
+
+.back-sect img {
+  width: 40px;
+  height: 40px;
+}
+
+.back-sect:hover {
+  opacity: 1;
+}
+
+@media only screen and (max-width: 1260px) {
+  header.header-sect {
+    font-size: 42px;
+  }
+
+  aside.back-sect {
+    bottom: calc(3rem + 68px);
+    width: 68px;
+    height: 68px;
+  }
+
+  aside.back-sect img {
+    width: 34px;
+    height: 34px;
+  }
+}
+
+@media only screen and (max-width: 1060px) {
+  header.header-sect {
+    font-size: 38px;
+  }
+}
+
+@media only screen and (max-width: 660px) {
+  header.header-sect {
+    font-size: 32px;
+  }
+
+  aside.back-sect {
+    right: 1rem;
+    bottom: calc(2rem + 48px);
+    width: 48px;
+    height: 48px;
+  }
+
+  aside.back-sect img {
+    width: 26px;
+    height: 26px;
+  }
+}

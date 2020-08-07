@@ -3,13 +3,21 @@ import './TechTalk.css';
 import { Link } from 'react-router-dom';
 import { OpinionForm } from './components';
 
+import bkIcon from '../../assets/back.svg';
+
 export default class TechTalk extends Component {
   render() {
     return (
       <div className="TechTalk">
-        <h1>Tell me what do you think!</h1>
+        <header className="header-sect">
+          <h1>Your Opinions Matter</h1>
+        </header>
         <OpinionForm />
-        <Link to="/">Back</Link>
+        <aside className="back-sect">
+          <Link className="back-btn" to="/">
+            <img src={bkIcon} alt="back" />
+          </Link>
+        </aside>
       </div>
     );
   }

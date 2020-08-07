@@ -5,7 +5,6 @@ import { BlackJack } from '../BlackJack';
 import { Nim } from '../Nim';
 import { TechTalk } from '../TechTalk';
 
-// Asset import
 import bjIcon from '../../assets/blackjack.svg';
 import nimIcon from '../../assets/nim.svg';
 import ghIcon from '../../assets/github.svg';

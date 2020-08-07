@@ -2,6 +2,8 @@ import React, { Component } from 'react';
 import './OpinionForm.css';
 import { Formik } from 'formik';
 
+import suIcon from '../../../../assets/submit.svg';
+
 // Firebase setup
 import * as firebase from 'firebase/app';
 import 'firebase/database';
@@ -178,7 +180,8 @@ export default class OpinionForm extends Component {
         }}
       </Formik>
     );
-    let msg = this.state.submitted ? <h1>Feedback submitted!</h1> : null
+    // let msg = this.state.submitted ? <h1>Feedback submitted!</h1> : null
+    let msg = 1 ? <h1>Feedback submitted!</h1> : null
 
     return (
       <div className="OpinionForm">
