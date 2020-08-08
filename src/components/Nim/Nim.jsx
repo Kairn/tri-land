@@ -27,7 +27,6 @@ export class Nim extends Component {
       screen = (
         <div>
           <Board style={style} mode={mode} level={level} />
-          <button type="button" onClick={this.leaveBoard}>Leave</button>
         </div>
       );
     } else {

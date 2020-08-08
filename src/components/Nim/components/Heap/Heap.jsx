@@ -24,7 +24,7 @@ export default class Heap extends Component {
           onClick={this.doRemove}
           onMouseEnter={this.doHover}
           onMouseLeave={this.doLeave}
-        >{i}</span>
+        ></span>
       );
     }
 
@@ -33,7 +33,6 @@ export default class Heap extends Component {
         className={"Heap" + (this.props.isSelected ? " selected" : "") + (this.props.isPlayerTurn ? " player" : "")}
         onClick={this.doSelect}
       >
-        <h2>This is a heap of size {this.props.count}.</h2>
         <div className="heap-row">
           {rocks}
         </div>

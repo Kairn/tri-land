@@ -3,6 +3,9 @@ import './Board.css';
 import { Heap } from '../Heap';
 import PropTypes from 'prop-types';
 
+import rsIcon from '../../../../assets/restart.svg';
+import rrIcon from '../../../../assets/reroll.svg';
+
 export default class Board extends Component {
   constructor(props) {
     super(props);
@@ -18,19 +21,21 @@ export default class Board extends Component {
   render() {
     let player = this.state.activePlayer === 1 ? 'Player 1' : this.state.activePlayer === 0 ? 'Computer' : 'Player 2';
     if (this.state.winner === -1 && player) {
-      player = <h2>{player}'s Turn</h2>
+      player = `${player}'s Turn`;
     } else {
       player = null;
     }
+
     let winner = this.state.winner === 1 ? 'Player 1' : this.state.winner === 0 ? 'Computer' : this.state.winner === 2 ? 'Player 2' : null;
     if (winner) {
-      winner = <div>Game over. Winner is {winner}.</div>
+      winner = `Game over. Winner is ${winner}.`;
     }
+
+    let boardMsg = player ? player : winner;
 
     return (
       <div className="Board">
-        <h1>This is a Nim board.</h1>
-        {player}
+        <h2 id="board-msg">{boardMsg}</h2>
         <div id="board-main-panel">
           {this.state.allHeaps.map((heap) => {
             return (
@@ -48,10 +53,15 @@ export default class Board extends Component {
             );
           })}
         </div>
-        {winner}
         <div id="nim-res">
-          <button type="button" onClick={this.resetBoard}>Restart</button>
-          <button type="button" onClick={this.initBoard}>Reroll</button>
+          <button className="nr-btn" type="button" onClick={this.resetBoard}>
+            <img src={rsIcon} alt="restart" />
+            <span>Restart</span>
+          </button>
+          <button className="nr-btn" type="button" onClick={this.initBoard}>
+            <img src={rrIcon} alt="reroll" />
+            <span>Reroll</span>
+          </button>
         </div>
       </div>
     );
@@ -108,14 +118,14 @@ export default class Board extends Component {
 
     // Populate initial heaps
     if (this.props.level === 1) {
-      const heapCount = this.getRandInt(3, 6);
+      const heapCount = this.getRandInt(3, 5);
       for (let i = 0; i < heapCount; ++i) {
-        heapVals.push(this.getRandInt(2, 7));
+        heapVals.push(this.getRandInt(2, 6));
       }
     } else {
-      const heapCount = this.getRandInt(7, 15);
+      const heapCount = this.getRandInt(6, 9);
       for (let i = 0; i < heapCount; ++i) {
-        heapVals.push(this.getRandInt(4, 16));
+        heapVals.push(this.getRandInt(3, 10));
       }
     }
 
