@@ -104,6 +104,10 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New", monospace;
 }
 
+button {
+  user-select: none;
+}
+
 /* Fonts */
 .font-mont {
   font-family: "Montserrat", sans-serif;
@@ -135,6 +139,7 @@ code {
 
 /* General */
 header.header-sect {
+  user-select: none;
   padding: 2.5rem 0 0;
   text-align: center;
   font-size: 52px;

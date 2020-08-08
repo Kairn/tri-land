@@ -3,6 +3,9 @@ import './Nim.css';
 import { Link } from 'react-router-dom';
 import { Board } from './components';
 
+import bkIcon from '../../assets/back.svg';
+import stIcon from '../../assets/start.svg';
+
 export class Nim extends Component {
   constructor(props) {
     super(props);
@@ -23,44 +26,56 @@ export class Nim extends Component {
     if (this.state.gameState === 1) {
       screen = (
         <div>
-          <h2>Playing Nim game</h2>
           <Board style={style} mode={mode} level={level} />
           <button type="button" onClick={this.leaveBoard}>Leave</button>
         </div>
       );
     } else {
       screen = (
-        <div>
-          <h2>Welcome to Nim game</h2>
-          <h2>Choose your game options</h2>
+        <div id="nim-op-screen">
+          <ul id="nim-rule-sect">
+            <h2>Rules</h2>
+            <li className="nim-rule">1. Players take turns removing objects (rocks) from distinct piles.</li>
+            <li className="nim-rule">2. A player must remove at least one object, and may remove any number of objects provided they all come from the same pile.</li>
+            <li className="nim-rule">3. The player who takes the last object wins (or loses in Misère) the game.</li>
+            <li className="nim-rule">4. AI will always lose if the player makes optimal moves, but it will win otherwise.</li>
+          </ul>
           <div id="nim-options">
-            <h3>Game Style:</h3>
+            <h3>Choose Game Style</h3>
             <div className="nim-op">
-              <button type="button" className={this.state ? "active-op" : ""} disabled={style === 1} onClick={this.setOption} value="S-1">Normal</button>
-              <button type="button" className={this.state ? "active-op" : ""} disabled={style === 2} onClick={this.setOption} value="S-2">Misère</button>
+              <button type="button" className={this.state.gameStyle === 1 ? "active-op" : ""} disabled={style === 1} onClick={this.setOption} value="S-1">Normal</button>
+              <button type="button" className={this.state.gameStyle === 2 ? "active-op" : ""} disabled={style === 2} onClick={this.setOption} value="S-2">Misère</button>
             </div>
-            <h3>Game Mode:</h3>
+            <h3>Choose Game Mode</h3>
             <div className="nim-op">
-              <button type="button" className={this.state ? "active-op" : ""} disabled={mode === 1} onClick={this.setOption} value="M-1">Versus AI</button>
-              <button type="button" className={this.state ? "active-op" : ""} disabled={mode === 2} onClick={this.setOption} value="M-2">Versus Player</button>
+              <button type="button" className={this.state.gameMode === 1 ? "active-op" : ""} disabled={mode === 1} onClick={this.setOption} value="M-1">Versus AI</button>
+              <button type="button" className={this.state.gameMode === 2 ? "active-op" : ""} disabled={mode === 2} onClick={this.setOption} value="M-2">Versus Player</button>
             </div>
-            <h3>Game Level:</h3>
+            <h3>Choose Game Level</h3>
             <div className="nim-op">
-              <button type="button" className={this.state ? "active-op" : ""} disabled={level === 1} onClick={this.setOption} value="L-1">Simple</button>
-              <button type="button" className={this.state ? "active-op" : ""} disabled={level === 2} onClick={this.setOption} value="L-2">Complex</button>
+              <button type="button" className={this.state.gameLevel === 1 ? "active-op" : ""} disabled={level === 1} onClick={this.setOption} value="L-1">Simple</button>
+              <button type="button" className={this.state.gameLevel === 2 ? "active-op" : ""} disabled={level === 2} onClick={this.setOption} value="L-2">Complex</button>
             </div>
           </div>
-          <button type="button" disabled={!this.isReady()} onClick={this.startGame}>Start</button>
-          <Link to="/">Quit</Link>
+          <div id="nim-start">
+            <button type="button" className={this.isReady() ? "" : "not-ready"} disabled={!this.isReady()} onClick={this.startGame}>
+              <span>Start</span>
+              <img src={stIcon} alt="start" />
+            </button>
+          </div>
         </div>
       );
     }
 
     return (
       <div className="Nim">
-        <h1>Nim reacts!</h1>
-        <h2>Nim Rules.</h2>
+        <header className="header-sect">
+          <h1>Welcome to Nim</h1>
+        </header>
         {screen}
+        <Link className="back-btn" to="/">
+          <img src={bkIcon} alt="back" />
+        </Link>
       </div>
     );
   }
