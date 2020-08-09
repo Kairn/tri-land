@@ -3,6 +3,10 @@ import './BlackJack.css';
 import { Link } from 'react-router-dom';
 import { Hand } from './components';
 
+import bkIcon from '../../assets/back.svg';
+import gbIcon from '../../assets/gamble.svg';
+import ctIcon from '../../assets/continue.svg';
+
 export class BlackJack extends Component {
   constructor(props) {
     super(props);
@@ -28,6 +32,7 @@ export class BlackJack extends Component {
   render() {
     let screen;
     let playerTurn = this.state.activeHand !== 0;
+    let cash = this.state.playerCash;
 
     if (this.state.gameState === 2) {
       let actions;
@@ -44,17 +49,19 @@ export class BlackJack extends Component {
       } else {
         let payoutRow = this.state.payout > -1 ? <h2>Your payout: ${this.state.payout}</h2> : null;
         actions = (
-          <div>
-            <div>{payoutRow}</div>
-            <button type="button" disabled={false} onClick={this.evalGame}>Continue</button>
+          <div id="payout-sect">
+            <div id="pay-row">{payoutRow}</div>
+            <button className="icon-btn" type="button" disabled={false} onClick={this.evalGame}>
+              <span>Continue</span>
+              <img src={ctIcon} alt="continue" />
+            </button>
           </div>
         );
       }
 
       screen = (
         <div>
-          <h2>Playing Black Jack</h2>
-          <h2>Your cash: ${this.state.playerCash}</h2>
+          <h2 className="cash-row">Your cash: ${cash}</h2>
           {this.state.allHands.map((hand) => {
             let handId = hand.handId;
             let cards = hand.cards;
@@ -66,7 +73,6 @@ export class BlackJack extends Component {
             return <Hand key={handId} playerId={handId} wager={wager} cards={cards} value={value} status={status} isBust={isBust} isActive={isActive} />
           })}
           {actions}
-          <button type="button" onClick={this.end}>End Game</button>
         </div>
       )
     } else if (this.state.gameState === 1) {
@@ -74,31 +80,56 @@ export class BlackJack extends Component {
 
       screen = (
         <div>
-          <h2>Your cash: ${this.state.playerCash}</h2>
-          <h2>{message}</h2>
-          <button type="button" disabled={this.state.playerCash < 100} onClick={this.onWage} value={100}>100</button>
-          <button type="button" disabled={this.state.playerCash < 50} onClick={this.onWage} value={50}>50</button>
-          <button type="button" disabled={this.state.playerCash < 20} onClick={this.onWage} value={20}>20</button>
-          <button type="button" disabled={this.state.playerCash < 10} onClick={this.onWage} value={10}>10</button>
-          <br />
-          <button type="button" onClick={this.end}>End Game</button>
+          <h2 className="cash-row">Your cash: ${cash}</h2>
+          <h2 id="msg-row">{message}</h2>
+          <div id="bj-act-sect">
+            <button className={cash < 100 ? "dis" : ""} type="button" disabled={cash < 100} onClick={this.onWage} value={100}>
+              <span>100</span>
+            </button>
+            <button className={cash < 50 ? "dis" : ""} type="button" disabled={cash < 50} onClick={this.onWage} value={50}>
+              <span>50</span>
+            </button>
+            <button className={cash < 20 ? "dis" : ""} type="button" disabled={cash < 20} onClick={this.onWage} value={20}>
+              <span>20</span>
+            </button>
+            <button className={cash < 10 ? "dis" : ""} type="button" disabled={cash < 10} onClick={this.onWage} value={10}>
+              <span>10</span>
+            </button>
+          </div>
         </div>
       )
     } else {
       screen = (
         <div>
-          <h2>Welcome to Black Jack</h2>
-          <button type="button" onClick={this.start}>Start Game</button>
-          <Link to="/">Quit</Link>
+          <ul id="bj-rule-sect">
+            <h2>Rules</h2>
+            <li className="bj-rule">1. The player starts with $1000 cash.</li>
+            <li className="bj-rule">2. If the player is dealt an Ace and a ten-value card (blackjack), and the dealer does not, the player wins and receives a bonus.</li>
+            <li className="bj-rule">3. If the player exceeds a sum of 21 (busts); the player loses, even if the dealer also exceeds 21.</li>
+            <li className="bj-rule">4. At 17 points (hard 17 only) or higher the dealer must stand.</li>
+            <li className="bj-rule">5. The player may forfeit immediately after receiving the initial hand and get half of the wager back.</li>
+            <li className="bj-rule">6. The player will receive one more card and be forced to stand after choosing to double.</li>
+            <li className="bj-rule">7. Split is only possible when holding two cards of the same rank.</li>
+          </ul>
+          <div id="bj-start">
+            <button type="button" onClick={this.start}>
+              <span>Begin</span>
+              <img src={gbIcon} alt="gamble" />
+            </button>
+          </div>
         </div>
       )
     }
 
     return (
       <div className="BlackJack">
-        <h1>BlackJack reacts!</h1>
-        <h2>BlackJack Rules.</h2>
+        <header className="header-sect">
+          <h1>Welcome to Blackjack</h1>
+        </header>
         {screen}
+        <Link className="back-btn" to="/">
+          <img src={bkIcon} alt="back" />
+        </Link>
       </div>
     );
   }
@@ -125,7 +156,7 @@ export class BlackJack extends Component {
   }
 
   onWage = (event) => {
-    this.newRound(parseInt(event.target.value, 10));
+    this.newRound(parseInt(event.target.value ? event.target.value : event.target.parentElement.value, 10));
   }
 
   onAction = (event) => {
