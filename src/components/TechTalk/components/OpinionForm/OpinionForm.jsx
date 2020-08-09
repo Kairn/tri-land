@@ -163,7 +163,7 @@ export default class OpinionForm extends Component {
                     name="source"
                     onChange={handleChange}
                     onBlur={handleBlur}
-                    value={values.profession}
+                    value={values.source}
                   >
                     <option value="github">GitHub</option>
                     <option value="social_media">Social Media</option>
@@ -212,8 +212,8 @@ export default class OpinionForm extends Component {
         }}
       </Formik>
     );
-    // let msg = this.state.submitted;
-    let msg = true;
+    let msg = this.state.submitted;
+    // let msg = true;
     let msgBox = (
       <div id="msg-box" className={msg ? "" : "not-vis"}>
         <div id="inner-msg">
