@@ -1,20 +1,98 @@
 .Hand {
   user-select: none;
+  margin: 5rem 0 0;
 }
 
-.Hand.bust .hand-row {
+.Hand.bust .hand-row h2 {
   text-decoration: line-through;
 }
 
 .hand-row {
-  border: 1px red dotted;
-  padding: 0.5rem;
+  width: 60%;
+  padding: 0.75rem 1rem;
+  opacity: 0.4;
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  align-items: center;
+  margin: 0 auto;
+}
+
+.hand-row.active {
+  opacity: 1;
+}
+
+.hand-row h2 {
+  align-self: stretch;
+  border: 6px double white;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 30px;
+  padding: 0 2rem;
+  margin: 0 2rem 0 0;
+}
+
+.cards-wrapper {
+  padding: 0 1rem;
   display: flex;
   flex-flow: row wrap;
   justify-content: flex-start;
   align-items: center;
 }
 
-.hand-row.active {
-  border: 2px green solid;
+.hand-sum {
+  margin: 0 0 1rem 0;
+}
+
+.hand-sum h2 {
+  font-size: 24px;
+  margin: 0.75rem 0;
+  text-align: center;
+}
+
+.hand-sum h2:nth-child(2) {
+  color: #ff6f00;
+}
+
+@media only screen and (max-width: 1360px) {
+  .hand-row {
+    width: 70%;
+  }
+}
+
+@media only screen and (max-width: 1060px) {
+  .hand-sum h2 {
+    font-size: 20px;
+  }
+
+  .hand-row {
+    width: 80%;
+  }
+
+  .hand-row h2 {
+    font-size: 26px;
+  }
+}
+
+@media only screen and (max-width: 860px) {
+  .hand-row {
+    width: 90%;
+  }
+
+  .hand-row h2 {
+    font-size: 24px;
+    border: 4px double white;
+    margin: 0 1.25rem 0 0;
+  }
+}
+
+@media only screen and (max-width: 660px) {
+  .hand-row {
+    width: 95%;
+  }
+
+  .hand-row h2 {
+    font-size: 22px;
+  }
 }

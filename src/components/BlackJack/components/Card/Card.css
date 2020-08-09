@@ -1,7 +1,62 @@
 .Card {
   user-select: none;
-  font-family: "Roboto Slab", serif;
-  margin: 0.5rem 1rem;
-  border: 1px black double;
-  border-radius: 2px;
+  margin: 0.75rem 1.5rem;
+  border-radius: 4px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  background-color: white;
+  padding: 2px 6px;
+  width: 80px;
+  height: 130px;
+}
+
+.s1,
+.s4 {
+  color: black;
+}
+
+.s2 {
+  color: #fb5252;
+}
+
+.s3 {
+  color: #c12020;
+}
+
+.Card span {
+  align-self: stretch;
+  font-size: 20px;
+}
+
+.r1 {
+  text-align: left;
+}
+
+.suit {
+  align-self: center;
+  width: 32px;
+  height: 32px;
+}
+
+.r2 {
+  text-align: right;
+}
+
+@media only screen and (max-width: 960px) {
+  .Card {
+    margin: 0.75rem 1.25rem;
+    padding: 2px 6px;
+    width: 72px;
+    height: 117px;
+  }
+
+  .Card span {
+    font-size: 18px;
+  }
+
+  .suit {
+    width: 28px;
+    height: 28px;
+  }
 }

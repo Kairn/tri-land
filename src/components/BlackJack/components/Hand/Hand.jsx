@@ -4,8 +4,8 @@ import { Card } from '../Card';
 import PropTypes from 'prop-types';
 
 export default function Hand(props) {
-  let owner = props.playerId === 0 ? 'Dealer' : 'Player';
-  let wagerRow = owner === 'Dealer' ? null : <h1>Wager: {props.wager}</h1>;
+  let ownerRow = props.playerId === 0 ? <h2>Dealer's Hand</h2> : null;
+  let wagerRow = ownerRow ? null : <h2>Wager: ${props.wager}</h2>;
   let handStatus;
   if (props.status) {
     switch (props.status) {
@@ -24,16 +24,20 @@ export default function Hand(props) {
       default:
     }
   }
-  handStatus = handStatus ? <h1>Status: {handStatus}</h1> : null;
+  handStatus = handStatus ? <h2>Status: {handStatus}</h2> : null;
 
   return props.cards ? (
     <div className={"Hand" + (props.isBust ? " bust" : "")} key={props.playerId.toString()}>
-      <h1>This is a {owner} hand</h1>
-      {wagerRow}
-      <h1>Hand Value: {props.value}</h1>
-      {handStatus}
+      <div className="hand-sum">
+        {ownerRow}
+        {wagerRow}
+        {handStatus}
+      </div>
       <div className={"hand-row" + (props.isActive ? " active" : "")}>
-        {props.cards.map((card) => <Card key={card.cardId} suit={card.suit} rank={card.rank} />)}
+        <h2 className="font-mono">{props.value < 10 ? `0${props.value}` : props.value}</h2>
+        <div className="cards-wrapper">
+          {props.cards.map((card) => <Card key={card.cardId} suit={card.suit} rank={card.rank} />)}
+        </div>
       </div>
     </div>
   ) : null;

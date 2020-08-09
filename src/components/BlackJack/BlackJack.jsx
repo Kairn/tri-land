@@ -38,12 +38,12 @@ export class BlackJack extends Component {
       let actions;
       if (this.state.evalRes === -1) {
         actions = (
-          <div>
-            <button type="button" disabled={!playerTurn} onClick={this.onAction} value="hit">Hit</button>
-            <button type="button" disabled={!playerTurn || !this.state.canSplit} onClick={this.onAction} value="split">Split</button>
-            <button type="button" disabled={!playerTurn || !this.state.canDouble} onClick={this.onAction} value="double">Double</button>
-            <button type="button" disabled={!playerTurn} onClick={this.onAction} value="stand">Stand</button>
-            <button type="button" disabled={!playerTurn || !this.state.canForfeit} onClick={this.onAction} value="forfeit">forfeit</button>
+          <div className="bj-plays">
+            <button className={!playerTurn ? "dis" : ""} type="button" disabled={!playerTurn} onClick={this.onAction} value="hit">Hit</button>
+            <button className={!playerTurn || !this.state.canSplit ? "dis" : ""} type="button" disabled={!playerTurn || !this.state.canSplit} onClick={this.onAction} value="split">Split</button>
+            <button className={!playerTurn || !this.state.canDouble ? "dis" : ""} type="button" disabled={!playerTurn || !this.state.canDouble} onClick={this.onAction} value="double">Double</button>
+            <button className={!playerTurn ? "dis" : ""} type="button" disabled={!playerTurn} onClick={this.onAction} value="stand">Stand</button>
+            <button className={!playerTurn || !this.state.canForfeit ? "dis" : ""} type="button" disabled={!playerTurn || !this.state.canForfeit} onClick={this.onAction} value="forfeit">forfeit</button>
           </div>
         );
       } else {
@@ -62,16 +62,18 @@ export class BlackJack extends Component {
       screen = (
         <div>
           <h2 className="cash-row">Your cash: ${cash}</h2>
-          {this.state.allHands.map((hand) => {
-            let handId = hand.handId;
-            let cards = hand.cards;
-            let wager = handId === 0 ? 0 : this.state.wager;
-            let value = this.state.handValues[handId];
-            let status = hand.status;
-            let isBust = this.state.handValues[handId] > 21;
-            let isActive = this.state.activeHand === handId;
-            return <Hand key={handId} playerId={handId} wager={wager} cards={cards} value={value} status={status} isBust={isBust} isActive={isActive} />
-          })}
+          <div className="bj-hands-sect">
+            {this.state.allHands.map((hand) => {
+              let handId = hand.handId;
+              let cards = hand.cards;
+              let wager = handId === 0 ? 0 : this.state.wager;
+              let value = this.state.handValues[handId];
+              let status = hand.status;
+              let isBust = this.state.handValues[handId] > 21;
+              let isActive = this.state.activeHand === handId;
+              return <Hand key={handId} playerId={handId} wager={wager} cards={cards} value={value} status={status} isBust={isBust} isActive={isActive} />
+            })}
+          </div>
           {actions}
         </div>
       )
