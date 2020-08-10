@@ -1,7 +1,8 @@
 # Tri Land
+[![Build Status](https://travis-ci.org/Kairn/tri-land.svg?branch=master)](https://travis-ci.org/Kairn/tri-land)
 [![Framework](https://img.shields.io/badge/reactjs-16.13.1-blue?style=flat&logo=react)](https://reactjs.org/)
 [![MIT license](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT)
-[![Site status](https://img.shields.io/badge/status-ok-green?style=flat)](?)
+[![Site status](https://img.shields.io/badge/status-ok-green?style=flat)](http://esoma-tril.s3-website.us-east-2.amazonaws.com/)
 
 Tri Land is a simple web application that aims to demonstrate the core features of React. It covers component layering, routing, jsx, state management, form handling, and other important concepts. The application features two built-in mini-games and a user form which connects to a real-time database. The pages are styled with basic CSS, and no back-end API is required for them to function.
 
