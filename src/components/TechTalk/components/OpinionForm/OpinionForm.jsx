@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import './OpinionForm.css';
 import { Formik } from 'formik';
+import sha256 from 'crypto-js/sha256';
 
 import suIcon from '../../../../assets/submit.svg';
 
@@ -26,7 +27,8 @@ const writeToFB = async function(email, name, source, profession, siteOpinion, r
   // Get hash ID from email
   let encoder = new TextEncoder();
   let data = encoder.encode(email);
-  let hash = await crypto.subtle.digest('SHA-256', data);
+  // let hash = await crypto.subtle.digest('SHA-256', data);
+  let hash = sha256(data).words;
   let hashArr = Array.from(new Uint8Array(hash)).slice(0, 12);
   const hashId = hashArr.map((byte) => {
     return byte.toString(16).padStart(2, '0');
