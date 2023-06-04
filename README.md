@@ -1,5 +1,5 @@
 # Tri Land
-[![Build Status](https://travis-ci.org/Kairn/tri-land.svg?branch=master)](https://travis-ci.org/Kairn/tri-land)
+[![CircleCI](https://dl.circleci.com/status-badge/img/gh/Kairn/tri-land/tree/master.svg?style=svg)](https://dl.circleci.com/status-badge/redirect/gh/Kairn/tri-land/tree/master)
 [![Framework](https://img.shields.io/badge/reactjs-16.13.1-blue?style=flat&logo=react)](https://reactjs.org/)
 [![MIT license](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT)
 [![Site status](https://img.shields.io/badge/status-ok-green?style=flat)](http://esoma-tril.s3-website.us-east-2.amazonaws.com/)
